@@ -1,0 +1,93 @@
+import React, { useState } from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Container from "@mui/material/Container"
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Checkbox from "@mui/material/Checkbox";
+
+const LoginForm = () => {
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        const data = new FormData(eventcurrentTarget)
+        console.log({
+            email: data.get('email'),
+            password: data.get('password'),
+        })
+    }
+
+    return (
+        <Container component="main" maxWidth="sm">
+            <Box
+                sx={{
+                    boxShadow: 1,
+                    borderRadius: 2,
+                    px: 4,
+                    py: 6,
+                    marginTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    /*backgroundColor: "#F6DDCC"*/
+
+                }}
+            >
+                <Typography component="h1" variant="h5">
+                    Sign In
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} nonValidate sx={{ mt: 1 }}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email"
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox value="remember" color="primary" />}
+                        label="Remember Me"
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{mt:3, mb:2}}
+                    >
+                        Sign In
+                    </Button>
+                    <Grid container>
+                        <Grid item xs>
+                            <Link href="#" variant="body2">
+                                Forgot Password?
+                            </Link>
+                        </Grid>
+                        <Grid item>
+                            <Link href="#" variant="body2">
+                                {"Don't have an account? Sign Up" }
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Box>
+                </Box>
+        </Container>
+    )
+}
+
+export default LoginForm
