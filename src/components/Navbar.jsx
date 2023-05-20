@@ -14,8 +14,8 @@ import MenuItem from '@mui/material/MenuItem';
 import SchoolIcon from '@mui/icons-material/School';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const pages = ['About Us', 'Contact Us'];
-const settings = ['Profile', 'Account', 'Logout'];
+const pages = ['About Us', 'Contact Us', ];
+const settings = ['Profile', 'Account', ];
 
 const Navbar = () =>{
   const [anchorElNav, setAnchorElNav] = React.useState(null);

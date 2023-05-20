@@ -12,28 +12,38 @@ import Select from "@mui/material/Select"
 import MenuItem from "@mui/material/MenuItem"
 import Date from "./Date";
 import Button from "@mui/material/Button"
+import Ielts from "./Ielts";
+import Alert from '@mui/material/Alert';
+import Education from './Education';
+import AddIcon from '@mui/icons-material/Add';
+import Navbar from "./Navbar";
 
-const lrswScore = ['1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9']
+
+const Scorecore = ['1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9']
 
 const Apply = () => {
-
+    const [edu, setEdu] = useState(false)
+    const [submit, setSubmit] = useState(false);
+    const [yesNo, setYesNo] = useState("")
     const [gender, setGender] = useState("")
-    const [ielts, setIelts] = useState("")
-    const [ieltsError, setIeltsError] = useState(false)
-    const [lrsw, setLrsw] = useState("")
-    
+
     const handleChange = e => {
         e.preventDefault();
     }
 
-    const handleIeltsChange = e => {
+    const handleYesNoChange = e => {
         e.preventDefault()
-        setIelts(e.target.value)
+        setYesNo(e.target.value)
     }
 
-    const handleLrswChange = e => {
+    const handleAddEduClick = e => {
         e.preventDefault()
-        setLrsw(e.target.value)
+        setEdu(true)
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        setSubmit(true)
     }
 
     const handleGenderChange = e => {
@@ -43,6 +53,8 @@ const Apply = () => {
 
     const defaultTheme = createTheme()
     return (
+        <React.Fragment>
+            <Navbar/>
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline/>
@@ -123,74 +135,66 @@ const Apply = () => {
                             />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="ielts"
-                                    label="IELTS Score"
-                                    name="ielts"
-                                    value={ielts}
-                                    error={ieltsError}
-                                    onChange={handleIeltsChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="select-lrsw-label">L-R-S-W Score</InputLabel>
+                                    <InputLabel id="select-yesNo-label">Have you given IELTS</InputLabel>
                                         <Select
-                                            labelId="select-lrsw-label"
-                                            id="lrsw"
-                                            value={lrsw}
-                                        label="L-R-S-W Score"
-                                        onChange={handleLrswChange}
+                                        labelId="select-yesNo-label"
+                                        id="yesNo"
                                         required
+                                        value={yesNo}
+                                        label="Have you given IELTS"
+                                        onChange={handleYesNoChange}
                                         >
-                                        {lrswScore.map(score => {
-                                            return (
-                                                <MenuItem value={score}>{score}</MenuItem>
-                                                )
-                                            })}
+                                            <MenuItem value={"yes"}>Yes</MenuItem>
+                                            <MenuItem value={"no"}>No</MenuItem>
                                         </Select>
                                     </FormControl>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    name="degree"
-                                    required
-                                    fullWidth
-                                    id="degree"
-                                    label="Degree"
-                                    onChange={handleChange}/>
 
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    name="specialization"
-                                    required
-                                    fullWidth
-                                    id="specialization"
-                                    label="Specialization"
-                                    onChange={handleChange}/>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                    <Date label="Start Date"/>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Date label="End Date"/>
-                            </Grid>
+
+                            {yesNo==="yes" && <Ielts/>}
+                            
+                            {
+                                yesNo === "no" &&
+                                <Grid item xs={12} >
+                                    <Date label="Date planned for IELTS"/>
+                                </Grid>
+                            }
+                            
+
+                            <Education />
+                            
+                            {
+                                edu && <Education onAdd={ ()=>{setEdu(false)}} />
+                            }
                         </Grid>
+                            <Button
+                                sx={{ mt: 3, mb: 2 }} variant="contained"
+                                fullWidth
+                                onClick={handleAddEduClick} endIcon={<AddIcon />}>
+                                    Add Education
+                                </Button>
                         <Button
                             type="submit"
                             variant="contained"
                             fullWidth
+                            onClick={handleSubmit}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Apply
                         </Button>
+
+                        {
+                            submit && 
+                            <Alert sx={{marginBottom:"2%"}} variant="filled" severity="success">
+                                You have applied successfully!
+                            </Alert>
+                        }
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
+            </ThemeProvider>
+            </React.Fragment>
     )
 }
 

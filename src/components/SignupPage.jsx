@@ -4,29 +4,51 @@ import Container from "@mui/material/Container";
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import MuiPhoneNumber from 'material-ui-phone-number';
+import { MuiTelInput } from 'mui-tel-input'
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select"
 import MenuItem from "@mui/material/MenuItem"
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link"
 import validator from "validator"
-
-
+import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+import { v4 as uuidv4 } from 'uuid';
+import users from "../localDb/users";
 const SignupForm = () => {
+
+    const navigate = useNavigate()
+
+    const [flag, setFlag] = useState(false)
+    const [flag1, setFlag1] = useState(false)
+    const [fName, setFName] = useState("")
+    const [lName, setLName] = useState("")
+    const [phoneNo, setPhoneNo] = useState("")
     const [gender, setGender] = useState("")
-    const [emailError, setEmailError] = useState(false) 
+    const [email, setEmail] = useState("")
+    const [emailError, setEmailError] = useState(false)
     const [passError, setPassError] = useState(false)
-    const [touch, setTouch] = useState(false);
+    const [passHelperText, setPassHelperText] = useState("")
     const [confPassError, setConfPassError] = useState(false)
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
     const defaultTheme = createTheme()
+
+    const postUser = (user) => {
+        user = {
+            ...user,
+            id: uuidv4()
+        }
+        users.push(user)
+        console.log(users);
+    }
 
     const confirmWithOrig = (e) => {
         setConfirmPassword(e.target.value)
@@ -37,6 +59,38 @@ const SignupForm = () => {
             setConfPassError(false)
         }
     }
+
+    const handleClick = e => {
+        e.preventDefault()
+        if (password !== confirmPassword) {
+            setFlag1(true)
+        }
+        else if (fName !== "" && lName !== "" && phoneNo !== "" && gender !== "" && email !== "" && password !== "" && confirmPassword !== "") {
+            setFlag(false)
+            const currUser = {
+                fName: fName,
+                lName: lName,
+                phoneNo: phoneNo,
+                gender: gender,
+                email: email,
+                password: password
+            }
+            postUser(currUser)
+            navigate('/dashboard')
+        } else {
+            setFlag(true)
+        } 
+    }
+
+    const handleFNameChange = e => {
+        e.preventDefault()
+        setFName(e.target.value)
+    }
+    const handleLNameChange = e => {
+        e.preventDefault()
+        setLName(e.target.value)
+    }
+
 
     const handleChange = e => {
         e.preventDefault();
@@ -49,6 +103,7 @@ const SignupForm = () => {
     
     const validateEmail = (e) => {
         handleChange(e)
+        setEmail(e.target.value)
         if (validator.isEmail(e.target.value)) {
             setEmailError(false)
         } else {
@@ -60,15 +115,21 @@ const SignupForm = () => {
         handleChange(e)
         setPassword(e.target.value)
         if (e.target.value === "") {
-            setPassError("")
+            setPassError(true)
         } else if (validator.isStrongPassword(e.target.value, {
             minLength: 8, minLowercase: 1,
             minUppercase: 1, minNumbers: 1, minSymbols: 1
         })) {
-            setPassError("Strong Password")
+            setPassHelperText("Strong Password")
+            setPassError(false)
         } else {
-            setPassError("Password should be at least 8 characters and should cotains atleast one each of uppercase, lowercase, digit and special character") 
+            setPassError(false)
+            setPassHelperText("Password should be at least 8 characters and should cotains atleast one each of uppercase, lowercase, digit and special character") 
         }
+    }
+
+    const handlePhoneNoChange = value => {
+        setPhoneNo(value)
     }
 
     const handleSubmit = e => {
@@ -114,7 +175,7 @@ const SignupForm = () => {
                         }}
                         src="../rooton.png"
                     >
-                        <LockOutlinedIcon/>
+                        {<SensorOccupiedIcon />}
                     </Avatar>
                     <Typography
                     component="h1" variant="h5">
@@ -126,10 +187,13 @@ const SignupForm = () => {
                                     autoComplete="given-name"
                                     name="firstName"
                                     required
+                                    value={fName}
                                     fullWidth
                                     id="firstName"
+                                    //error={fNameError}
+                                    helperText="* Required"
                                     label="First Name"
-                                    onChange={handleChange}/>
+                                    onChange={handleFNameChange}/>
 
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -138,28 +202,32 @@ const SignupForm = () => {
                                     fullWidth
                                     id="lastName"
                                     label="Last Name"
+                                    value={lName}
                                     name="lastName"
+                                    helperText="* Required"
                                     autoComplete="family-name"
-                                    onChange={handleChange}
+                                    onChange={handleLNameChange}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <MuiPhoneNumber 
-                                    defaultCountry={'in'}
-                                    required
-                                    fullWidth
-                                    id="phoneNo"
-                                    name="phoneNo"
-                                    onChange={handleChange}
-                                />
+                                    <MuiTelInput
+                                    sx={{display:'flex'}}
+                                    value={phoneNo}
+                                    placeholder="Contact Number"
+                                    helperText="* Required"
+                                    forceCallingCode
+                                    onChange={handlePhoneNoChange}
+                                    />
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="select-gender-label">Gender</InputLabel>
+                                    <InputLabel id="select-gender-label"
+                                    helperText="* Required">Gender</InputLabel>
                                         <Select
                                             labelId="select-gender-label"
                                             id="gender"
-                                            value={gender}
+                                        value={gender}
+                                        
                                         label="Gender"
                                         required
                                             onChange={handleGenderChange}
@@ -168,7 +236,8 @@ const SignupForm = () => {
                                             <MenuItem value={"F"}>Female</MenuItem>
                                             <MenuItem value={"LGBTQ"}>Non-Binary</MenuItem>
                                             <MenuItem value={"NA"}>Prefer not to say</MenuItem>
-                                        </Select>
+                                    </Select>
+                                    <FormHelperText>* Required</FormHelperText>
                                     </FormControl>
                             </Grid>
                             
@@ -180,7 +249,9 @@ const SignupForm = () => {
                             label="Email Address"
                                     name="email"
                                     type="email"
+                                    value={email}
                                     error={emailError}
+                                    helperText={emailError ? "Please enter a valid email address" : '* Required'}
                                     autoComplete="email"
                                     onChange={(e) => validateEmail(e)}
                             />
@@ -194,8 +265,8 @@ const SignupForm = () => {
                             type="password"
                             id="password"
                             value={password}
-                            error={touch && passError === ""}
-                            helperText={touch && passError === "" ?  'Empty field!' : passError}
+                            error={passError}
+                            helperText={!passError && passHelperText==="" ? "* Required" :passHelperText}
                             onChange={(e) => validatePassword(e) }
                             autoComplete="new-password"
                             />
@@ -211,7 +282,7 @@ const SignupForm = () => {
                                     value={confirmPassword}
                                     onChange={(e) => confirmWithOrig(e)}
                                     error={confPassError}
-                                    helperText={confPassError ? 'Passwords Do Not Match' : ''}
+                                    helperText={confPassError ? 'Passwords Do Not Match' : 'Passwords Matched'}
                                     autoComplete="confirm-password"
                             />
                         </Grid>
@@ -221,18 +292,21 @@ const SignupForm = () => {
                             type="submit"
                             variant="contained"
                             fullWidth
+                            onClick={handleClick}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Register
                         </Button>
-                        <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="#" variant="body2">
+                        <Grid container justifyContent="flex-end" sx={{marginBottom:'3.5%'}}>
+                            <Grid item >
+                                <Link href="/login" variant="body2">
                                     Already have an account? Sign In
                                 </Link>
                             </Grid>
+                            {flag && <Alert variant="filled" sx={{ margin: 'auto', marginTop: '5%', width: '100%' }} severity="error">One or more fields are missing!</Alert>}
+                            {flag1 && <Alert variant="filled" sx={{ margin: 'auto', marginTop: '5%', width: '100%' }} severity="error">Passwords do not match!</Alert>}
                         </Grid>
-                </Box>
+                    </Box>
             </Box>
         </Container>
     </ThemeProvider>

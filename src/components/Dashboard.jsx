@@ -6,30 +6,46 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack"
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import universities from "../universities"
+import universities from "../localDb/universities"
 import Navbar from "./Navbar";
+import Button from "@mui/material/Button"
+import { useNavigate } from "react-router-dom";
+import { passUni } from "../redux/actions/Uni";
+import { connect } from "react-redux";
 import University from "./University"
 
-const Dashboard = () => {
-    const handleUniChange = e => {
-        setUni(e.target.value)
+const Dashboard = ({ passUni }) => {
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState("")
+    const navigate = useNavigate()
+    const handleUniChange = (e, newValue) => {
+        e.preventDefault();
+        console.log(newValue);
+        setValue(newValue)
+        setOpen(false)
+        navigate('/university', { replace: true, state:{uniName: newValue}})
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        navigate('/login')
     }
 
     return (
-        <div>
+        <React.Fragment>
             <Navbar/>
             <Container component="main" maxWidth="sm">
                 <Box
                     sx={{
-                        boxShadow: 1,
+                        boxShadow: 3,
                         borderRadius: 2,
-                        px: 4,
-                        py: 6,
+                        px: 'auto',
+                        py: 4,
                         marginTop: 8,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        /*backgroundColor: "#F6DDCC"*/
+                        backgroundColor: "##FEF8DD"
                     }}
                 >
                     <Grid>
@@ -48,7 +64,9 @@ const Dashboard = () => {
                         direction:"column",
                     }}>
                         <Autocomplete
-                        freeSolo
+                            freeSolo
+                            open={open}
+                            onOpen={()=>{setOpen(true)}}
                         id="free-solo-2-demo"
                             disableClearable
                             uniName={universities.map(uni=> uni.name)}
@@ -64,12 +82,28 @@ const Dashboard = () => {
                                 }}
                             />
                             )}
+                            onChange={handleUniChange}
+                            onClose={()=> {setOpen(false)}}
                         />
                     </Stack>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        onClick={handleSubmit}
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Log Out
+                    </Button>
                 </Box>
             </Container>
-        </div>
+        </React.Fragment>   
     )
 }
 
-export default Dashboard
+const mapStateToProps = (state) => ({})
+
+const mapDispatchToProps = (dispatch) => ({
+    passUni: (uniName)=>(dispatch(passUni(uniName)))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps) (Dashboard)
