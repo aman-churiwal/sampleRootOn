@@ -20,9 +20,17 @@ import validator from "validator"
 import { useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import { v4 as uuidv4 } from 'uuid';
+//import fs from "browserify-fs";
 import users from "../localDb/users";
+const fs = require("fs")
+
+import { addUser } from "../redux/slices/applySilce"
+import { useDispatch } from "react-redux";
+
+
 const SignupForm = () => {
 
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const [flag, setFlag] = useState(false)
@@ -35,33 +43,47 @@ const SignupForm = () => {
     const [emailError, setEmailError] = useState(false)
     const [passError, setPassError] = useState(false)
     const [passHelperText, setPassHelperText] = useState("")
-    const [confPassError, setConfPassError] = useState(false)
+    const [confPassError, setConfPassError] = useState()
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [confPassHelperText, setConfPassHelperText] = useState("")
 
     const defaultTheme = createTheme()
 
-    const postUser = (user) => {
-        user = {
-            ...user,
-            id: uuidv4()
-        }
-        users.push(user)
-        console.log(users);
-    }
+    // const postUser = (user) => {
+    //     user = {
+    //         ...user,
+    //         id: uuidv4()
+    //     }
+    //     users.push(user)
+    //     const jsonData = JSON.stringify(users)
+    //     console.log(jsonData)
+        // fs.writeFile('users.json', jsonData, 'utf-8', (err) => {
+        //     if (err) {
+        //         console.error(err)
+        //     } else {
+        //         console.log("JSON file updated")
+        //     }
+        // })
+    // }
 
     const confirmWithOrig = (e) => {
         setConfirmPassword(e.target.value)
         //console.log(pass)
-        if (password !== e.target.value) {
-            setConfPassError(true)
+        if (e.target.value === "") {
+            setConfPassError("* Required")
+        } else if (password !== e.target.value) {
+            setConfPassHelperText("Passwords do not match")
+            setConfPassError(Boolean(true))
         } else {
-            setConfPassError(false)
+            setConfPassHelperText("Passswords Matched")
+            setConfPassError(Boolean(false))
         }
     }
 
     const handleClick = e => {
-        e.preventDefault()
+        //e.preventDefault()
+        console.log("Handle Click Called")
         if (password !== confirmPassword) {
             setFlag1(true)
         }
@@ -75,7 +97,14 @@ const SignupForm = () => {
                 email: email,
                 password: password
             }
-            postUser(currUser)
+            //postUser(currUser)
+            dispatch(addUser({
+                firstName: fName,
+                lastName: lName,
+                phoneNo: phoneNo,
+                gender: gender,
+                email: email,
+            }))
             navigate('/dashboard')
         } else {
             setFlag(true)
@@ -155,7 +184,7 @@ const SignupForm = () => {
                 >
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={(e) => handleClick(e)}
                         noValidate
                         sx={{
                         mt:3
@@ -282,7 +311,7 @@ const SignupForm = () => {
                                     value={confirmPassword}
                                     onChange={(e) => confirmWithOrig(e)}
                                     error={confPassError}
-                                    helperText={confPassError ? 'Passwords Do Not Match' : 'Passwords Matched'}
+                                    helperText={confPassHelperText}
                                     autoComplete="confirm-password"
                             />
                         </Grid>
@@ -292,7 +321,7 @@ const SignupForm = () => {
                             type="submit"
                             variant="contained"
                             fullWidth
-                            onClick={handleClick}
+                            //onSubmit={}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Register

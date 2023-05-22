@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Date from "./Date"
 
-const Education = () => {
+const Education = (props) => {
 
     const handleChange = e => {
         e.preventDefault();
@@ -17,7 +17,8 @@ const Education = () => {
                                     required
                                     fullWidth
                                     id="degree"
-                                    label="Degree"
+                    label="Degree"
+                    value={props.degree}
                                     onChange={handleChange}/>
 
                             </Grid>
@@ -27,14 +28,15 @@ const Education = () => {
                                     required
                                     fullWidth
                                     id="specialization"
-                                    label="Specialization"
+                    label="Specialization"
+                    value={props.specialization}
                                     onChange={handleChange}/>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                    <Date label="Start Date"/>
+                                    <Date d={props.startDate} label="Start Date"/>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <Date label="End Date"/>
+                <Date d={props.endDate } label="End Date"/>
                             </Grid>
         </React.Fragment>
     )

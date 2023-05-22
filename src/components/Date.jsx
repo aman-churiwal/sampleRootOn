@@ -7,10 +7,10 @@ import { DesktopDatePicker } from '@mui/x-date-pickers';
 
 const Date = (props) =>{
   return (
-     <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoItem label={props.label}>
-              <DesktopDatePicker label={'MM/YYYY'} views={['month', 'year']}  />
-</DemoItem>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoItem label={props.label}>
+          <DesktopDatePicker value={props.d} label={'MM/YYYY'} views={['month', 'year']}  />
+        </DemoItem>
     </LocalizationProvider>
   );
 }

@@ -7,13 +7,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom"
 import { connect } from 'react-redux';
-import { passUni } from '../redux/actions/Uni';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-const University = ({ uniName }) => {
+const University = () => {
     
     const location = useLocation()
+    console.log(location.state)
     const navigate = useNavigate()
     const handleBackClick = (e) => {
         e.preventDefault();
@@ -67,11 +67,4 @@ const University = ({ uniName }) => {
     )
 }
 
-const mapStateToProps = (state) => {
-    console.log(state)
-    return {uniName: state.uniReducer}
-}
-
-const mapDispatchToProps = (dispatch) => ({})
-
-export default connect(mapStateToProps, mapDispatchToProps)(University)
+export default University

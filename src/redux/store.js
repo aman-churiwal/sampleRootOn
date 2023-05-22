@@ -1,9 +1,9 @@
-import { combineReducers, createStore } from "redux"
-import uniReducer from "./reducers/uni-reducer"
-import userReducer from "./reducers/user-reducer"
+import { configureStore } from "@reduxjs/toolkit"
+import applyReducer from "./slices/applySilce"
 
-const rootReducer = combineReducers({ uniReducer, userReducer })
-
-const store = createStore(rootReducer)
-
-export default store
+export const store = configureStore({
+    reducer: {
+        apply1: applyReducer,
+    },
+    devTools: true
+})
