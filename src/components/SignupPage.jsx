@@ -98,14 +98,17 @@ const SignupForm = () => {
                 password: password
             }
             //postUser(currUser)
-            dispatch(addUser({
-                firstName: fName,
-                lastName: lName,
-                phoneNo: phoneNo,
-                gender: gender,
-                email: email,
-            }))
-            navigate('/dashboard')
+            // dispatch(addUser({
+            //     firstName: fName,
+            //     lastName: lName,
+            //     phoneNo: phoneNo,
+            //     gender: gender,
+            //     email: email,
+            // }))
+
+            localStorage.setItem('user', JSON.stringify(currUser))
+
+            navigate('/login')
         } else {
             setFlag(true)
         } 
@@ -184,7 +187,7 @@ const SignupForm = () => {
                 >
                     <Box
                         component="form"
-                        onSubmit={(e) => handleClick(e)}
+                        //onSubmit={(e) => handleClick(e)}
                         noValidate
                         sx={{
                         mt:3
@@ -261,10 +264,10 @@ const SignupForm = () => {
                                         required
                                             onChange={handleGenderChange}
                                         >
-                                            <MenuItem value={"M"}>Male</MenuItem>
-                                            <MenuItem value={"F"}>Female</MenuItem>
-                                            <MenuItem value={"LGBTQ"}>Non-Binary</MenuItem>
-                                            <MenuItem value={"NA"}>Prefer not to say</MenuItem>
+                                            <MenuItem value={"Male"}>Male</MenuItem>
+                                            <MenuItem value={"Female"}>Female</MenuItem>
+                                            <MenuItem value={"Non-Binary"}>Non-Binary</MenuItem>
+                                            <MenuItem value={"Prefer not to say"}>Prefer not to say</MenuItem>
                                     </Select>
                                     <FormHelperText>* Required</FormHelperText>
                                     </FormControl>
@@ -321,7 +324,7 @@ const SignupForm = () => {
                             type="submit"
                             variant="contained"
                             fullWidth
-                            //onSubmit={}
+                            onClick={handleClick}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Register

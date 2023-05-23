@@ -15,9 +15,11 @@ import users from "../localDb/users";
 
 const LoginForm = () => {
 
+    const currUser = JSON.parse(localStorage.getItem('user'))
+
     const [flag, setFlag] = useState(false)
     const [wrongCredFlag, setWrongCredFlag] = useState(false)
-    const [email, setEmail] = useState("")
+    const [email, setEmail] = useState(currUser.email)
     const [emailError, setEmailError] = useState(false)
     const [password, setPassword] = useState("")
     const [passError, setPassError] = useState(false)
@@ -26,16 +28,26 @@ const LoginForm = () => {
     const handleSignInClick = (e) => {
         e.preventDefault();
 
-        for (let i = 0; i < users.length; i++) {
-            if (email === "" || password === "") {
-                setFlag(true)
-            } else if (users[i].email === email && users[i].password === password) {
-                setFlag(false);
-                navigate('/dashboard/')
-            } else {
-                setWrongCredFlag(true)
-            }
+        if (email === "" || password === "") {
+            setWrongCredFlag(false)
+            setFlag(true)
+        } else if (password !== currUser.password) {
+            setFlag(false)
+            setWrongCredFlag(true)
+        } else {
+            navigate('/dashboard')
         }
+
+        // for (let i = 0; i < users.length; i++) {
+        //     if (email === "" || password === "") {
+        //         setFlag(true)
+        //     } else if (users[i].email === email && users[i].password === password) {
+        //         setFlag(false);
+        //         navigate('/dashboard/')
+        //     } else {
+        //         setWrongCredFlag(true)
+        //     }
+        // }
     }
         const handleEmailChange = e => {
             e.preventDefault();

@@ -2,10 +2,13 @@ import { createSlice, createSelector } from "@reduxjs/toolkit"
 
 const applySlice = createSlice({
     name: "Apply",
-    initialState: [{ fName: "Aman", lName: "Churiwal", gender: "Male", email:"amanchuriwal22@gmail.com"}],
+    initialState: [],
     reducers: {
-        addUser: (state, action) => {
-            state.push(...state, action.payload)
+        addUser(state, action) {
+            console.log("Add User Called")
+            state.push(action.payload)
+            console.log(action.payload)
+            console.log(state)
         },
     },
 });
@@ -15,6 +18,6 @@ export const getUserSelector = createSelector(
     (state) => state
 )
 
-export const {addUser} = applySlice.actions
-
 export default applySlice.reducer
+
+export const {addUser} = applySlice.actions

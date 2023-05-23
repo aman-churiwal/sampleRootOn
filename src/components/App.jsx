@@ -6,7 +6,7 @@ import Dashboard from './Dashboard'
 import University from './University'
 import Apply from './Apply'
 import {Provider} from 'react-redux';
-import {store} from '../redux/store'
+import store from '../redux/store'
 
 const App = () => {
     return (

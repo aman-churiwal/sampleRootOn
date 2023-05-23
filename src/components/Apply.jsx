@@ -26,15 +26,20 @@ const Scorecore = ['1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5', '5.5', '
 
 const Apply = () => {
 
-    const user = useSelector(getUserSelector)
+    // const user = useSelector((state) => {
+    //     return state.apply1
+    // })
+    // console.log(user)
+
+    const user = JSON.parse(localStorage.getItem('user'))
     console.log(user)
 
     const [submit, setSubmit] = useState(false);
     const [flag, setFlag] = useState(false)
-    const [fName, setFName] = useState(user[0].fName)
-    const [lName, setLName] = useState(user[0].lName)
-    const [gender, setGender] = useState(user[0].gender)
-    const [email, setEmail] = useState(user[0].email)
+    const [fName, setFName] = useState(user.fName)
+    const [lName, setLName] = useState(user.lName)
+    const [gender, setGender] = useState(user.gender)
+    const [email, setEmail] = useState(user.email)
     const [yesNo, setYesNo] = useState("")
     const [lrsw, setLrsw] = useState({
         l: "",
